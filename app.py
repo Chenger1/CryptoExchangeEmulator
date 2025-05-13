@@ -13,7 +13,7 @@ def run_cli():
         start_app()
     except ImportError as e:
         traceback.print_exc()
-        logger.error(f'Unable to load libraries: {e}')
+        logger.error(f'Unable to load libraries: {e}.')
         sys.exit(1)
 
 
