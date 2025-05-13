@@ -17,4 +17,4 @@ class WebController(Controller):
         status_code=HTTP_200_OK,
     )
     async def index(self) -> Template:
-        return Template(template_name='index.html')
+        return Template(template_name='index.html.jinja2')
