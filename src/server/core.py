@@ -22,12 +22,12 @@ class ApplicationCore(InitPlugin):
 
     def on_app_init(self, app_config: AppConfig) -> AppConfig:
         from src.domain.web.controllers import WebController
-        from src.domain.websockets.controllers import WebsocketController
+        from src.domain.websockets.controllers import ws_handler
 
         app_config.route_handlers.extend([
             create_static_files_router(path='/static', directories=[Path(__file__).parent.parent / 'assets'], name='assets'),
             WebController,
-            WebsocketController
+            ws_handler
         ])
 
         app_config.template_config = self._get_template_config()
