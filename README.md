@@ -1,1 +1,3 @@
 # CryptoExchangeEmulator
+
+README - in progress
