@@ -23,31 +23,39 @@ from src.server.config import Config
 async def ws_handler(socket: WebSocket) -> None:
     await socket.accept()
     should_stop = anyio.Event()
-    Config.CLIENTS.append(socket.client.port)
+    queue_name = None
 
     async def handle_stream() -> AsyncGenerator[str, None]:
         while not should_stop.is_set():
             await anyio.sleep(1)
             try:
-                data = await Config.QUEUE.get()
-                if socket.client.port not in data['proceeded_clients']:
-                    data['proceeded_clients'].append(socket.client.port)
-                    yield json.dumps(data['data'])
-                    if len(data['proceeded_clients']) != len(Config.CLIENTS):
-                        await Config.QUEUE.put(data)
+                print(queue_name)
+                if queue_name == 'web':
+                    data = await Config.WEB_QUEUE.get()
+                elif queue_name == 'service':
+                    data = await Config.SERVICE_QUEUE.get()
+                else:
+                    continue
+
+                yield data['data']
             except asyncio.QueueEmpty:
                 continue
 
     async def handle_receive() -> Any:
+        nonlocal queue_name
         async for event in socket.iter_json():
             logger.info(f'Event: {event}')
             if isinstance(event, dict) and event.get('topic') == 'userSignal':
+                queue_name = 'web'
                 Config.EXCHANGE = event.get('exchange')
-                await Config.QUEUE.put({'data': event['signal'], 'proceeded_clients': []})
+                if event['signal'] == 'success':
+                    continue
+                await Config.SERVICE_QUEUE.put({'data': event['signal']})
             else:
                 if Config.EXCHANGE is None:
                     raise ValueError('Exchange is not set')
-                await Config.QUEUE.put({'data': event, 'proceeded_clients': []})
+                queue_name = 'service'
+                await Config.WEB_QUEUE.put({'data': json.dumps(event)})
 
                 exchange_auth: ExchangeAuthProtocol = get_exchange_auth()
                 response = exchange_auth.response_to_auth_signal(event)

@@ -63,7 +63,7 @@ class OKXExchangeAuth:
             return {
                 'event': 'pong'
             }
-        return signal
+        return None
 
 
 def get_exchange_auth() -> Optional[ExchangeAuthProtocol]:

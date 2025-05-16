@@ -14,9 +14,13 @@ function WebsocketHandler(){
 
     this.onOpen = function(){
         const This = this;
+
         This.connectionStatus.innerHTML = 'Connected';
         This.connectionStatus.classList.add('text-success');
         This.connectionStatus.classList.remove('text-warning');
+
+        const exchange = Array.from(This.buttons).find(button => button.checked).id;
+        This.connection.send(JSON.stringify({'topic': 'userSignal', 'exchange': exchange, 'signal': 'success'}))
 
         document.getElementById('send-signal').addEventListener('click', function(){
             const exchange = Array.from(This.buttons).find(button => button.checked).id;
