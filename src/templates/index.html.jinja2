@@ -47,12 +47,17 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col">
-                            <span class="text-warning">Not Connected</span>
+                            <button type="button" class="btn btn-primary" id="connect-btn">Connect</button>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col">
-                            <form id="signalForm">
+                            <span class="text-warning" id="connection-status">Not Connected</span>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col">
+                            <form id="signal-form">
                                 <label for="signal" class="form-label">Signal data</label>
                                 <textarea name="signal" id="signal" cols="50" rows="10" class="form-control" placeholder="Place signal here to send"></textarea>
                             </form>
@@ -60,7 +65,7 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col">
-                            <button class="btn btn-primary" id="sendSignal">Send signal</button>
+                            <button class="btn btn-primary" id="send-signal">Send signal</button>
                         </div>
                     </div>
                 </div>
@@ -74,7 +79,9 @@
 <script src="{{ url_for('assets', file_path='websocket.js') }}"></script>
 <script>
     const handler = new WebsocketHandler();
-    handler.connect();
+    document.getElementById('connect-btn').onclick = () =>{
+        handler.connect();
+    }
 </script>
 </body>
 </html>
