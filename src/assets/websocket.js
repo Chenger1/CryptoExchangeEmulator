@@ -3,11 +3,13 @@ function WebsocketHandler(){
     this.signalForm = document.getElementById('signal-form');
     this.buttons = document.getElementsByClassName('btn-check');
     this.connectionStatus = document.getElementById('connection-status')
+    this.externalSignalContainer = document.getElementById('external-signal-container');
 
     this.connect = function(){
         this.connection = new WebSocket("ws://localhost:8000/ws");
         this.connection.onmessage = function(e){ console.log(e.data); };
         this.connection.onopen = () => this.onOpen();
+        this.connection.onmessage = (e) => this.onMessage(e);
     }
 
     this.onOpen = function(){
@@ -25,5 +27,20 @@ function WebsocketHandler(){
             }
             This.connection.send(JSON.stringify(signal));
         })
+    }
+
+    this.onMessage = function(event){
+        this.addNewExternalSignal(event);
+    }
+
+    this.addNewExternalSignal = function(signal){
+        const newCard = document.createElement('div');
+        newCard.classList.add('card', 'mb-1', 'external-signal-card');
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('body');
+        const content = document.createTextNode(signal.data);
+        cardBody.append(content);
+        newCard.append(cardBody);
+        this.externalSignalContainer.prepend(newCard)
     }
 }

@@ -47,6 +47,8 @@ async def ws_handler(socket: WebSocket) -> None:
             else:
                 if Config.EXCHANGE is None:
                     raise ValueError('Exchange is not set')
+                await Config.QUEUE.put({'data': event, 'proceeded_clients': []})
+
                 exchange_auth: ExchangeAuthProtocol = get_exchange_auth()
                 response = exchange_auth.response_to_auth_signal(event)
                 if response:

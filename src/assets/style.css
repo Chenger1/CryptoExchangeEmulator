@@ -1,0 +1,9 @@
+#external-signal-container{
+    max-height: 500px;
+    border: 1px solid;
+    padding: 10px;
+}
+
+.external-signal-card{
+    padding: 10px;
+}
