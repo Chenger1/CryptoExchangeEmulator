@@ -23,6 +23,7 @@ class ApplicationCore(InitPlugin):
     def on_app_init(self, app_config: AppConfig) -> AppConfig:
         from src.domain.web.controllers import WebController
         from src.domain.websockets.controllers import ws_handler
+        from src.server.custom_websocket import CustomWebSocket
 
         app_config.route_handlers.extend([
             create_static_files_router(path='/static', directories=[Path(__file__).parent.parent / 'assets'], name='assets'),
@@ -32,5 +33,6 @@ class ApplicationCore(InitPlugin):
 
         app_config.template_config = self._get_template_config()
         app_config.debug = os.getenv('DEBUG', default='True') == 'True'
+        app_config.websocket_class = CustomWebSocket
 
         return app_config

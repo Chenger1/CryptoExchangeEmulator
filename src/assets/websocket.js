@@ -12,7 +12,7 @@ function WebsocketHandler(){
     this.onOpen = function(){
         const This = this;
         document.getElementById('sendSignal').addEventListener('click', function(){
-            const exchange = Array.from(This.buttons).find(button => button.checked).name;
+            const exchange = Array.from(This.buttons).find(button => button.checked).id;
             const signal = {
                 'topic': 'userSignal',
                 'exchange': exchange,
